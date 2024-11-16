@@ -1,3 +1,3 @@
-module go-inmemorycache
+module github.com/StandyBee/go-inmemorycache
 
-go 1.23
+go 1.23.2
