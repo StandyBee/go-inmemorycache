@@ -31,4 +31,4 @@ jobs:
         run: go mod tidy
 
       - name: Run tests
-        run: go test ./.. -coverprofile=coverage.txt
+        run: go test -coverprofile=coverage.txt
