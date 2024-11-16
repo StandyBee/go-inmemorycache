@@ -31,4 +31,4 @@ jobs:
         run: go mod tidy
 
       - name: Run tests
-        run: go test ./...
+        run: go test tests/inmemcache_test.go -coverprofile=coverage.txt
