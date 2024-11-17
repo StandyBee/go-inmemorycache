@@ -1,5 +1,6 @@
 # Go In-Memory Cache
-[![codecov](https://codecov.io/github/StandyBee/go-inmemorycache/graph/badge.svg?token=USEJ0ANWJ4)](https://codecov.io/github/StandyBee/go-inmemorycache)
+[![Maintainability](https://api.codeclimate.com/v1/badges/453ffec79ebc2b587622/maintainability)](https://codeclimate.com/github/StandyBee/go-inmemorycache/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/453ffec79ebc2b587622/test_coverage)](https://codeclimate.com/github/StandyBee/go-inmemorycache/test_coverage)
 
 Go In-Memory Cache is a simple in-memory key-value store for Go projects. This package provides an easy-to-use API to store, retrieve, and delete values in memory with basic concurrency support.
 
