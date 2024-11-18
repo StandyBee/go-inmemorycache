@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"go-inmemorycache/inmemcache"
+	"github.com/StandyBee/go-inmemorycache/inmemcache"
 	"testing"
 	"time"
 )
