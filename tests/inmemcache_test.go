@@ -1,20 +1,21 @@
 package tests
 
 import (
-	"github.com/StandyBee/go-inmemorycache/inmemcache"
+	"go-inmemorycache/inmemcache"
 	"testing"
+	"time"
 )
 
 func TestInMemCache_SetAndGet(t *testing.T) {
 	cache := inmemcache.NewInMemCache()
 
-	err := cache.Set("key1", 123)
+	err := cache.Set("key1", 123, time.Second)
 	if err != nil {
 		t.Fatalf("Set failed: %v", err)
 	}
 
-	val, found := cache.Get("key1")
-	if !found {
+	val, err := cache.Get("key1")
+	if err != nil {
 		t.Fatalf("Get failed: %v", err)
 	}
 
@@ -25,7 +26,7 @@ func TestInMemCache_SetAndGet(t *testing.T) {
 
 func TestInMemCache_Set_EmptyKey(t *testing.T) {
 	cache := inmemcache.NewInMemCache()
-	err := cache.Set("", 0)
+	err := cache.Set("", 0, time.Second)
 	if err == nil {
 		t.Fatalf("Set failed: %v", err)
 	}
@@ -34,16 +35,32 @@ func TestInMemCache_Set_EmptyKey(t *testing.T) {
 func TestInMemCache_Get_NonExistentKey(t *testing.T) {
 	cache := inmemcache.NewInMemCache()
 
-	_, found := cache.Get("nonExistentKey")
-	if found {
+	_, err := cache.Get("nonExistentKey")
+	if err == nil {
 		t.Fatalf("Get should return false for non-existent key")
+	}
+}
+
+func TestInMemCache_Get_ExpiredKey(t *testing.T) {
+	cache := inmemcache.NewInMemCache()
+	err := cache.Set("key1", 123, time.Millisecond*10)
+
+	if err != nil {
+		t.Fatalf("Set failed: %v", err)
+	}
+
+	time.Sleep(15 * time.Millisecond)
+
+	_, err = cache.Get("key1")
+	if err == nil || err.Error() != "key expired" {
+		t.Fatalf("Get failed: %v", err)
 	}
 }
 
 func TestInMemCache_Delete(t *testing.T) {
 	cache := inmemcache.NewInMemCache()
 
-	err := cache.Set("key1", "value1")
+	err := cache.Set("key1", "value1", time.Second)
 	if err != nil {
 		t.Fatalf("Set failed: %v", err)
 	}
@@ -53,9 +70,9 @@ func TestInMemCache_Delete(t *testing.T) {
 		t.Fatalf("Delete failed: %v", err)
 	}
 
-	_, found := cache.Get("key1")
-	if found {
-		t.Fatalf("Get should return false for deleted key")
+	_, err = cache.Get("key1")
+	if err == nil {
+		t.Fatalf("Get should return err for deleted key")
 	}
 }
 
@@ -77,7 +94,7 @@ func TestInMemCache_Concurrency(t *testing.T) {
 	for i := 0; i < numOps; i++ {
 		go func(i int) {
 			key := "key" + string(rune(i))
-			err := cache.Set(key, i)
+			err := cache.Set(key, i, time.Second)
 			if err != nil {
 				return
 			}
